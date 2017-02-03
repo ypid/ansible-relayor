@@ -54,7 +54,7 @@
   with_items: "{{ masterkeycheck.results }}"
 
 - name: Collect fingerprints for MyFamily (LOCAL)
-  shell: cut  -d" " -f2 {{ tor_offline_masterkey_dir }}/*/fingerprint|sort|xargs|sed -e 's/ /,/g'
+  shell: for i in {{ tor_offline_masterkey_dir }}/*; do tor --orport auto --quiet --datadirectory  $i --list-fingerprint; done|cut -d" " -f2-|sed -e 's/ //g'|sort|xargs|sed -e 's/ /,/g'
   delegate_to: 127.0.0.1
   run_once: true
   register: family
